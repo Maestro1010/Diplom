@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse,HttpResponse
 from django.template.loader import render_to_string
-from django.db.models import Min,Max,Count
+from django.db.models import Min,Max,Count,Avg
 from .models import *
 from .forms import SignupForm,ReviewAdd
 from django.contrib.auth import login,authenticate
@@ -67,7 +67,12 @@ def product_detail(request, slug, id):
         if reviewCheck > 0:
             canAdd=False
 
-    return render(request, 'product_detail.html', {'data':product, 'related':related_produtcs,'sizes':sizes, 'reviewForm': reviewForm, 'canAdd': canAdd})
+    # Отображение отзывов
+    reviews=ProductReview.objects.filter(product=product)
+    # Средняя оценка
+    avg_reviews = ProductReview.objects.filter(product=product).aggregate(avg_rating=Avg('review_rating'))
+
+    return render(request, 'product_detail.html', {'data':product, 'related':related_produtcs,'sizes':sizes, 'reviewForm': reviewForm, 'canAdd': canAdd, 'reviews': reviews, 'avg_reviews': avg_reviews})
 
 # Функция Поиска
 def search(request):
@@ -192,4 +197,7 @@ def save_review(request,pid):
         'review_text': request.POST['review_text'],
         'review_rating': request.POST['review_rating']
     }
-    return JsonResponse({'bool':True, 'data': data})
+
+    avg_reviews = ProductReview.objects.filter(product=product).aggregate(avg_rating=Avg('review_rating'))
+
+    return JsonResponse({'bool':True, 'data': data, 'avg_reviews':avg_reviews})

@@ -144,6 +144,9 @@ $(document).ready(function(){
                     $('.review-list').prepend(_html);
 
                     $('#productReview').modal('hide');
+                    // Средняя оценка
+                    $('.avg-rating').text(res.avg_reviews.avg_rating.toFixed(1))
+
                 }
             }
         });
