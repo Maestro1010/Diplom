@@ -59,7 +59,15 @@ def product_detail(request, slug, id):
     related_produtcs = Product.objects.filter(category=product.category).exclude(id=id)[:4]
     sizes = ProductAttribute.objects.filter(product=product).values('size__id','size__title','price').distinct()
     reviewForm=ReviewAdd()
-    return render(request, 'product_detail.html', {'data':product, 'related':related_produtcs,'sizes':sizes, 'reviewForm': reviewForm})
+
+    #Проверка на добавление отзыва
+    canAdd=True
+    reviewCheck=ProductReview.objects.filter(user=request.user, product=product).count()
+    if request.user.is_authenticated:
+        if reviewCheck > 0:
+            canAdd=False
+
+    return render(request, 'product_detail.html', {'data':product, 'related':related_produtcs,'sizes':sizes, 'reviewForm': reviewForm, 'canAdd': canAdd})
 
 # Функция Поиска
 def search(request):

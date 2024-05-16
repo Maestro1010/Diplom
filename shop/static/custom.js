@@ -125,6 +125,8 @@ $(document).ready(function(){
                 if(res.bool==true){
                     $(".ajaxRes").html('Ваш отзыв был сохранен');
                     $("#reset").trigger('click');
+                    //Скрыть кнопку если отзыв добавлен
+                    $(".reviewBtn").hide();
                 }
             }
         });
