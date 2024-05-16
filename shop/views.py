@@ -187,4 +187,9 @@ def save_review(request,pid):
         review_text=request.POST['review_text'],
         review_rating=request.POST['review_rating'],
         )
-    return JsonResponse({'bool':True})
+    data ={
+        'user': user.username,
+        'review_text': request.POST['review_text'],
+        'review_rating': request.POST['review_rating']
+    }
+    return JsonResponse({'bool':True, 'data': data})

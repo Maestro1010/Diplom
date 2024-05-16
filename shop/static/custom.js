@@ -127,6 +127,23 @@ $(document).ready(function(){
                     $("#reset").trigger('click');
                     //Скрыть кнопку если отзыв добавлен
                     $(".reviewBtn").hide();
+
+                    var _html='<blockquote class="blockquote text-right">';
+                    _html+='<small>'+res.data.review_text+'</small>';
+                    _html+='<footer class="blockquote-footer">'+res.data.user;
+                    _html+='<cite title="Source Title">';
+                    for(var i=1; i<=res.data.review_rating; i++){
+                        _html+='<i class="fa fa-star text-warning"></i>';
+                    }
+                    _html+='<i class="fa fa-star text-warning"></i>';
+                    _html+='</cite>';
+                    _html+='</footer>';
+                    _html+='</blockquote>';
+                    _html+='</hr>';
+
+                    $('.review-list').prepend(_html);
+
+                    $('#productReview').modal('hide');
                 }
             }
         });
